@@ -16,5 +16,5 @@ In a browser or curl from the command line:
    * localhost:6543/quotes/random - returns a random quote
 
 api:
-	* all requests from a specific session id - localhost:6543/api/user_requests
-	* localhost:6543/api/user_requests?=<session_id>
+  * all requests from a specific session id - localhost:6543/api/session_requests
+  * localhost:6543/api/session_requests?=<session_id>
