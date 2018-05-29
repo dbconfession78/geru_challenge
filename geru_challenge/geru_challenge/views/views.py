@@ -1,22 +1,22 @@
-from pyramid.view import (
-    view_config,
-    view_defaults
-)
+"""
+Module views - contains class methods related web and api request views
+"""
 from datetime import datetime
 from .page_request import PageRequest
-import requests
-from random import sample
-from pyramid.session import SignedCookieSessionFactory
-from uuid import uuid4
 from ..models.engine.db_storage import DBStorage
+from pyramid.session import SignedCookieSessionFactory
+from pyramid.view import (view_config, view_defaults)
+from random import sample
+import requests
+from uuid import uuid4
 
 
 @view_defaults(renderer='templates/index.jinja2')
-class APIRequestManagaer:
+class RequestManagaer:
+    """
+    RequestManager class definition related to web and api request views
+    """
     def __init__(self, request):
-        """
-        __init__ - initializes an instance of the API class
-        """
         self.api_url = "https://1c22eh3aj8.execute-api.us-east-1.amazonaws." \
                        "com/challenge/quotes"
         self.api_messages = [" is not a valid quote id.",
@@ -76,7 +76,7 @@ class APIRequestManagaer:
         """
         handle_session - stores session info in db
         :param request: session request
-        :return: None
+        :Return: None
         """
         id = self.request.session.get('id')
         if not id:
@@ -95,11 +95,23 @@ class APIRequestManagaer:
 
     @view_config(route_name='home')
     def home(self):
+        """
+        home - view definition for '/' route
+        :Return: dictionary containing name of project.
+        """
         self.handle_session()
-        return {'name': 'geru_quotes_api_v3'}
+        return {'name': 'geru_challenge'}
 
     @view_config(route_name='all_entries')
-    def get_session_requests(self):
+    tdef get_session_requests(self):
+        """
+        get_session_requessts - view definition for the
+                                '/api/session_requests' route
+        :Return: dict whose value is either:
+                 - dict of lists if 'session_id' param is provided.
+                 - list of all session_ids and their corresponding dicts if no
+                   param provided.
+        """
         params = self.request.params
         dct = {}
         for k, v in params.items():
@@ -115,11 +127,3 @@ class APIRequestManagaer:
             ret = lst
 
         return {"api_response": ret}
-
-    @view_config(route_name='session_requests')
-    def get_session_requests_by_id(self):
-        input('from session_requests')
-        params = request.params.get('name', 'no name provided')
-        input(params)
-        session_id = self.request.matchdict.get("session_id")
-        dct = self.storage.get(session_id)
