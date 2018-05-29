@@ -13,7 +13,3 @@ class PageRequest(Base):
     session_id = Column(String, nullable=False)
     datetime = Column(DateTime, nullable=False, default=datetime.utcnow)
     request = Column(String, nullable=False)
-
-
-#engine = create_engine('sqlite:///geru_db.db')
-#Base.metadata.create_all(engine)
