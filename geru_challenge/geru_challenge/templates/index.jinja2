@@ -1,13 +1,17 @@
 <!DOCTYPE HTML>
 <html lang="en">
   <head>
-	<script src="../static/scripts/quotes.js"></script>
     <title>Web Challenge 1.0</title>
 	{% if name %}
 	Web Challenge 1.0
 	{% endif %}
+
+	{% if api_response %}
+	{{ api_response }}
+	{% endif %}
+	
 	<div class="list_wrapper">
-	  <ul>		
+	  <ul>
 		{% if "quote" in dct %}
 	       ({{ dct["n"] }}) {{ dct["quote"] }}
 		{% endif %}

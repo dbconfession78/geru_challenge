@@ -88,7 +88,7 @@ class APIRequestManagaer:
 
         req_url = self.request.path_url
         new_request = PageRequest(session_id=self.request.session['id'],
-                                  datetime = datetime.now(),
+                                  datetime = datetime.utcnow(),
                                   request = req_url)
         self.storage.new(new_request)
         self.storage.save()
@@ -98,4 +98,22 @@ class APIRequestManagaer:
     def home(self):
         self.handle_session()
         return {'name': 'geru_quotes_api_v3'}
+
+    @view_config(route_name='all_entries')
+    def get_session_requests(self):
+        params = self.request.params
+        dct = {}
+        for k, v in params.items():
+            if k == 'session_id':
+                requests = self.storage.get(v)
+            dct[v] = requests
+        if not dct:
+            dct = self.storage.all()
+        return {"api_response": dct}
     
+    @view_config(route_name='session_requests')
+    def get_session_requests_by_id(self):
+        params = request.params.get('name','no name provided')
+        input(params)
+        session_id = self.request.matchdict.get("session_id")
+        dct = self.storage.get(session_id)

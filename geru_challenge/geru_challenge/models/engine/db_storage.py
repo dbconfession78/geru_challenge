@@ -6,8 +6,7 @@ Database engine
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from ...views.page_request import Base, PageRequest
-
-
+from datetime import datetime
 
 class DBStorage:
     """
@@ -43,6 +42,28 @@ class DBStorage:
         """
         self.__session.rollback()
 
+    def all(self):
+        self.reload()
+        entries = self.__session.query(PageRequest).all()
+        obj_dct = {}
+        for entry in entries:
+            time = datetime.strftime(entry.datetime, "%Y-%m-%d %H:%M:%S.%f")
+            if entry.session_id not in obj_dct:
+                obj_dct[entry.session_id] = []
+            obj_dct[entry.session_id].append({"time": time, "request": entry.request})
+
+        return obj_dct
+
+    def get(self, session_id):
+        lst = []
+        q = self.__session.query(PageRequest).filter(PageRequest.session_id == session_id)
+        for entry in q:
+            time = datetime.strftime(entry.datetime, "%Y-%m-%d %H:%M:%S.%f")
+            request = entry.request
+            lst.append({"time": time, "request": request})
+        return lst
+
+        
     def delete(self, obj=None):
         """
         deletes obj from current db session if not None
