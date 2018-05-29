@@ -1,7 +1,7 @@
 *~
 *#*
 *.egg
-
+*.db
 *.pyc
 *$py.class
 *~
