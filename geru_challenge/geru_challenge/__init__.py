@@ -14,7 +14,6 @@ def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
 
-    
     with Configurator() as config:
         config.include('pyramid_chameleon')
         config.include('pyramid_jinja2')
