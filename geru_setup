@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-export VENV=./geru_challenge/env
+export VENV="$PWD/geru_challenge/env"
+export DB="$PWD/geru_challenge/geru_db.db"
+export GERU_DEV_INI="$PWD/geru_challenge/development.ini"
 python3 -m venv $VENV
 $VENV/bin/pip install --upgrade pip setuptools
 $VENV/bin/pip install "pyramid==1.9.2" waitress
@@ -8,7 +10,7 @@ $VENV/bin/pip install pyramid_jinja2
 $VENV/bin/pip install requests
 $VENV/bin/pip install sqlalchemy
 $VENV/bin/pip install -e ./geru_challenge
-export GERU_DEV_INI="$PWD/geru_challenge/development.ini"
+
 #export GERU_DEV_INI="$VENV/../development.ini"
 #alias geru_start='$VENV/bin/pserve $GERU_DEV_INI --reload &>/dev/null & disown; alias geru_stop="kill $(pgrep -lfa geru_challenge | cut -d" " -f1) | unalias geru_stop"'
 alias geru_stop='for pid in $(pgrep -lfa geru_challenge | cut -d" " -f1); do kill -9 $pid; done'

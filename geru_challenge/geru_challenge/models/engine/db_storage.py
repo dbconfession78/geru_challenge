@@ -2,7 +2,7 @@
 Database engine
 """
 
-
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from ...views.page_request import Base, PageRequest
@@ -18,7 +18,8 @@ class DBStorage:
 
     def __init__(self):
         # TODO: set admin and pw in db and then here
-        self.__engine = create_engine('sqlite:///geru_db.db')
+        db = os.getenv('DB')
+        self.__engine = create_engine('sqlite:///{}'.format(db))
         self.reload()
 
     def new(self, obj):
