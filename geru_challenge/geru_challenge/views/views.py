@@ -17,15 +17,17 @@ class APIRequestManagaer:
         """
         __init__ - initializes an instance of the API class
         """
-        self.api_url = "https://1c22eh3aj8.execute-api.us-east-1.amazonaws.com/challenge/quotes"
+        self.api_url = "https://1c22eh3aj8.execute-api.us-east-1.amazonaws." \
+                       "com/challenge/quotes"
         self.api_messages = [" is not a valid quote id.",
                              "unable to connect to api."]
         self.n = None
-        self.session_factory = SignedCookieSessionFactory("Ican'ttellyoumysecretnowcanI?")
+        self.session_factory = SignedCookieSessionFactory(
+            "Ican'ttellyoumysecretnowcanI?")
         self.request = request
         self.session = None
         self.storage = DBStorage()
-        
+
     @view_config(route_name='get_quotes')
     def get_quotes(self):
         """
@@ -49,7 +51,6 @@ class APIRequestManagaer:
         """
         self.handle_session()
         self.n = self.request.matchdict.get('quote_num')
-        # self.n = None
         r = requests.get(self.api_url)
         if r.status_code == 200:
             quotes = r.json()["quotes"]
@@ -60,7 +61,6 @@ class APIRequestManagaer:
             else:
                 self.n = int(self.n)
 
-#            self.n = n
             if type(self.n) != int:
                 val = "{}".format(self.api_messages[0])
                 return {"quote": "{}".format(val)}
@@ -88,11 +88,10 @@ class APIRequestManagaer:
 
         req_url = self.request.path_url
         new_request = PageRequest(session_id=self.request.session['id'],
-                                  datetime = datetime.utcnow(),
-                                  request = req_url)
+                                  datetime=datetime.utcnow(),
+                                  request=req_url)
         self.storage.new(new_request)
         self.storage.save()
-
 
     @view_config(route_name='home')
     def home(self):
@@ -107,13 +106,20 @@ class APIRequestManagaer:
             if k == 'session_id':
                 requests = self.storage.get(v)
             dct[v] = requests
+            ret = dct
         if not dct:
             dct = self.storage.all()
-        return {"api_response": dct}
-    
+            lst = []
+            for k, v in dct.items():
+                lst.append({k: v})
+            ret = lst
+
+        return {"api_response": ret}
+
     @view_config(route_name='session_requests')
     def get_session_requests_by_id(self):
-        params = request.params.get('name','no name provided')
+        input('from session_requests')
+        params = request.params.get('name', 'no name provided')
         input(params)
         session_id = self.request.matchdict.get("session_id")
         dct = self.storage.get(session_id)
