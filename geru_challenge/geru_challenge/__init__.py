@@ -7,13 +7,10 @@ from uuid import uuid4
 from wsgiref.simple_server import make_server
 
 
-session_factory = SignedCookieSessionFactory("Ican'ttellyoumysecretnowcanI?")
-
-
 def main(global_config, **settings):
-    """ This function returns a Pyramid WSGI application.
-    """
-
+    """ This function returns a Pyramid WSGI application."""
+    session_factory = SignedCookieSessionFactory(
+        "Ican'ttellyoumysecretnowcanI?")
     with Configurator() as config:
         config.include('pyramid_chameleon')
         config.include('pyramid_jinja2')
