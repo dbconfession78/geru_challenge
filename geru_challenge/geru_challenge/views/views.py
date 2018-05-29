@@ -103,7 +103,7 @@ class RequestManagaer:
         return {'name': 'geru_challenge'}
 
     @view_config(route_name='all_entries')
-    tdef get_session_requests(self):
+    def get_session_requests(self):
         """
         get_session_requessts - view definition for the
                                 '/api/session_requests' route
