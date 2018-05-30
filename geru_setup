@@ -10,8 +10,5 @@ $VENV/bin/pip install pyramid_jinja2
 $VENV/bin/pip install requests
 $VENV/bin/pip install sqlalchemy
 $VENV/bin/pip install -e ./geru_challenge
-
-#export GERU_DEV_INI="$VENV/../development.ini"
-#alias geru_start='$VENV/bin/pserve $GERU_DEV_INI --reload &>/dev/null & disown; alias geru_stop="kill $(pgrep -lfa geru_challenge | cut -d" " -f1) | unalias geru_stop"'
 alias geru_stop='for pid in $(pgrep -lfa geru_challenge | cut -d" " -f1); do kill -9 $pid; done'
 alias geru_start='$VENV/bin/pserve $GERU_DEV_INI --reload &>/dev/null & disown'
