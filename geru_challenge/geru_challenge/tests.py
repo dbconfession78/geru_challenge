@@ -19,7 +19,7 @@ class ViewTests(unittest.TestCase):
 
 class FunctionalTests(unittest.TestCase):
     def setUp(self):
-        from geru_quotes_api_v3 import main
+        from geru_challenge import main
         app = main({})
         from webtest import TestApp
         self.testapp = TestApp(app)

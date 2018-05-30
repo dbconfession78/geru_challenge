@@ -3,9 +3,9 @@ Database engine
 """
 
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from ...views.page_request import Base, PageRequest
+from geru_challenge.models.page_request import Base, PageRequest
 from datetime import datetime
 
 
@@ -21,6 +21,9 @@ class DBStorage:
         db = os.getenv('DB')
         self.__engine = create_engine('sqlite:///{}'.format(db))
         self.reload()
+        self.request_params = {"session_id": PageRequest.session_id,
+                               "page": PageRequest.request,
+                               "time": PageRequest.datetime}
 
     def new(self, obj):
         """
@@ -39,33 +42,43 @@ class DBStorage:
 
     def rollback_session(self):
         """
-        rolls back a sesssion in the event of an exception
-        :return:
+        rollback_session - rolls back a sesssion in the event of an exception
+        :return: None
         """
         self.__session.rollback()
 
-    def all(self):
-        self.reload()
-        entries = self.__session.query(PageRequest).all()
-        obj_dct = {}
-        for entry in entries:
-            time = datetime.strftime(entry.datetime, "%Y-%m-%d %H:%M:%S.%f")
-            if entry.session_id not in obj_dct:
-                obj_dct[entry.session_id] = []
-            obj_dct[entry.session_id].append(
-                {"time": time,
-                 "request": entry.request})
-
-        return obj_dct
-
-    def get(self, session_id):
+    def get(self, params=None):
+        """
+        get - fetches db records
+        :param params: optional dict containing db filters
+        :return: list of query response dicts, 1 per record;
+                 None if any param key is invalid
+        """
+        if params is None:
+            params = {}
         lst = []
-        q = self.__session.query(
-            PageRequest).filter(PageRequest.session_id == session_id)
+        filters = []
+
+        for k, v in params.items():
+            _filter = self.request_params.get(k)
+            if not _filter:
+                return ["{} is not a valid parameter".format(k)]
+            filters.append(_filter == v)
+
+        if filters:
+            q = self.__session.query(
+                PageRequest).filter(and_(f for f in filters))
+        else:
+            q = self.__session.query(PageRequest).all()
+
         for entry in q:
             time = datetime.strftime(entry.datetime, "%Y-%m-%d %H:%M:%S.%f")
             request = entry.request
-            lst.append({"time": time, "request": request})
+            lst.append({
+                "session_id": entry.session_id,
+                "time": time,
+                "request": request})
+
         return lst
 
     def delete(self, obj=None):

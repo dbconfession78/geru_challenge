@@ -6,34 +6,28 @@
   </head>
   <body>
 	<header>
-
 	</header>
 	<div class="inner_wrapper">
 	{% if name %}
-	<div class="title_wrapper">
 	  <div class="title">
 	  Web Challenge 1.0
 	  </div>
-	</div>
 	{% endif %}
-
-	
 	{% if api_response %}
 	  {{ api_response }}
 	{% else %}
 	  <ul id="quotes_list">
 		{% if "quote" in dct %}
-		  ({{ dct["n"] }}) {{ dct["quote"] }}
+            ({{ dct["n"] }}) {{ dct["quote"] }}
 		{% endif %}
 		{% if "quotes" in dct %}
 		  {% for elem in dct["quotes"] %}
-		    <li> {{ elem }} </li>
+            <li> {{ elem }} </li>
 		  {% endfor %}
 			{% endif %}
 	  </ul>
 	  {% endif %}
 	  </div>
-	<footer>
-	</footer>
   </body>
+
 </html>

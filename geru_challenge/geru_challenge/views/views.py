@@ -2,7 +2,7 @@
 Module views - contains class methods related web and api request views
 """
 from datetime import datetime
-from .page_request import PageRequest
+from geru_challenge.models.page_request import PageRequest
 from ..models.engine.db_storage import DBStorage
 from pyramid.session import SignedCookieSessionFactory
 from pyramid.view import (view_config, view_defaults)
@@ -65,7 +65,7 @@ class RequestManagaer:
                 val = "{}".format(self.api_messages[0])
                 return {"quote": "{}".format(val)}
 
-            val = quotes[self.n-1] if self.n > 0 and self.n <= _len else \
+            val = quotes[self.n-1] if 0 < self.n <= _len else \
                 self.api_messages[0]
         else:
             val = self.api_messages[1]
@@ -75,16 +75,15 @@ class RequestManagaer:
     def handle_session(self):
         """
         handle_session - stores session info in db
-        :param request: session request
         :Return: None
         """
-        id = self.request.session.get('id')
-        if not id:
-            id = str(uuid4())
-            self.request.session['id'] = id
-            print("new session ID: {}".format(id))
+        _id = self.request.session.get('id')
+        if not _id:
+            _id = str(uuid4())
+            self.request.session['id'] = _id
+            print("new session ID: {}".format(_id))
         else:
-            print("updated existing ID: {}".format(id))
+            print("updated existing ID: {}".format(_id))
 
         req_url = self.request.path_url
         new_request = PageRequest(session_id=self.request.session['id'],
@@ -105,29 +104,18 @@ class RequestManagaer:
     @view_config(route_name='all_entries', renderer="json")
     def get_session_requests(self):
         """
-        get_session_requessts - view definition for the
-                                '/api/session_requests' route
-        :Return: dict whose value is either:
-                 - dict of lists if 'session_id' param is provided.
-                 - list of all session_ids and their corresponding dicts if no
-                   param provided.
+        get_session_requests - view definition for the
+                               '/api/session_requests' route
+        :Return: list of dicts, each of which has session id, request time and
+                 page requested
         """
         params = self.request.params
-        dct = {}
-        requests = None
+        retval = None
         if params:
-            for k, v in params.items():
-                if k == 'session_id':
-                    requests = self.storage.get(v)
-                    break
-            if requests is None:
-                ret = ["invalid endpoint"]
-            else:
-                ret = requests
-        else:
-            dct = self.storage.all()
-            lst = []
-            for k, v in dct.items():
-                lst.append({k: v})
-            ret = str(lst)
-        return {"response": ret}
+            retval = self.storage.get(params)
+            if not retval:
+                retval = ["invalid endpoint"]
+
+        if retval is None:
+            retval = self.storage.get()
+        return {"response": retval}
