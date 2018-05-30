@@ -1,29 +1,39 @@
 <!DOCTYPE HTML>
 <html lang="en">
   <head>
+	<link rel="stylesheet" href="{{ request.static_url('geru_challenge:static/styles/common.css') }}"/>
     <title>Web Challenge 1.0</title>
-	{% if name %}
-	Web Challenge 1.0
-	{% endif %}
-
-	{% if api_response %}
-	{{ api_response }}
-	{% endif %}
-	
-	<div class="list_wrapper">
-	  <ul>
-		{% if "quote" in dct %}
-	       ({{ dct["n"] }}) {{ dct["quote"] }}
-		{% endif %}
-
-		{% if "quotes" in dct %}
-	       {% for elem in dct["quotes"] %}
-	       <li> {{ elem }} </li>
-	       {% endfor %}
-		{% endif %}
-	  </ul>
-	</div>
   </head>
   <body>
+	<header>
+
+	</header>
+	<div class="inner_wrapper">
+	{% if name %}
+	<div class="title_wrapper">
+	  <div class="title">
+	  Web Challenge 1.0
+	  </div>
+	</div>
+	{% endif %}
+
+	
+	{% if api_response %}
+	  {{ api_response }}
+	{% else %}
+	  <ul id="quotes_list">
+		{% if "quote" in dct %}
+		  ({{ dct["n"] }}) {{ dct["quote"] }}
+		{% endif %}
+		{% if "quotes" in dct %}
+		  {% for elem in dct["quotes"] %}
+		    <li> {{ elem }} </li>
+		  {% endfor %}
+			{% endif %}
+	  </ul>
+	  {% endif %}
+	  </div>
+	<footer>
+	</footer>
   </body>
 </html>

@@ -19,6 +19,7 @@ def main(global_config, **settings):
         config.add_route('get_quotes', '/quotes')
         config.add_route('get_quote', '/quotes/{quote_num}')
         config.add_route('all_entries', '/api/session_requests')
+        config.add_static_view(name='static', path='geru_challenge:static')
 
         config.scan(".views")
         app = config.make_wsgi_app()

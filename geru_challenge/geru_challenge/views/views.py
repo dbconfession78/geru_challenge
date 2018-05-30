@@ -102,7 +102,7 @@ class RequestManagaer:
         self.handle_session()
         return {'name': 'geru_challenge'}
 
-    @view_config(route_name='all_entries')
+    @view_config(route_name='all_entries', renderer="json")
     def get_session_requests(self):
         """
         get_session_requessts - view definition for the
@@ -114,16 +114,20 @@ class RequestManagaer:
         """
         params = self.request.params
         dct = {}
-        for k, v in params.items():
-            if k == 'session_id':
-                requests = self.storage.get(v)
-            dct[v] = requests
-            ret = dct
-        if not dct:
+        requests = None
+        if params:
+            for k, v in params.items():
+                if k == 'session_id':
+                    requests = self.storage.get(v)
+                    break
+            if requests is None:
+                ret = ["invalid endpoint"]
+            else:
+                ret = requests
+        else:
             dct = self.storage.all()
             lst = []
             for k, v in dct.items():
                 lst.append({k: v})
-            ret = lst
-
-        return {"api_response": ret}
+            ret = str(lst)
+        return {"response": ret}
