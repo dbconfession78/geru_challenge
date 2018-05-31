@@ -47,7 +47,7 @@ api:
 
 AUTHOR
 ======
-* Stuart Kuredjian
+* Stuart Kuredjian<br>
 [sgkur04@gmail.com](sgkur04@gmail.com)
 [github.com/dbconfession78](https://www.github.com/dbconfession78)
 [linkedin.com/in/stuart-kuredjian](https://www.linkedin.com/in/stuart-kuredjian)
