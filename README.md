@@ -1,5 +1,5 @@
-Description
-===========
+## DESCRIPTION
+==============
 This application queries a remote 'Zen of Python' dictionary to:
 	 - display all 19 lines from the dictionary
 	 - display a specific quote and quote number from the dictionary
@@ -7,14 +7,14 @@ This application queries a remote 'Zen of Python' dictionary to:
 
 The application assigns a unique uuid4 id to each unique browser that makes a reuqest. This id, along with the requested page and time are recorded in a sqlite3 database available for query by a RESTful API.
 
-Installation
-=============
+## INSTALLATION
+===============
 from the comand line:
 - navigate to the download location
 - run 'source ./geru_setup'
 
-Use
-===
+## USE
+======
 NOTE: THis is intended for development and uses a virtual environment. This means that, environmental variables and aliasaes created in setup will not persist between terminal instances
 
 At a command-line prompt:
@@ -44,4 +44,6 @@ api:
                       }
                  ]
 	}
-    
+
+## AUTHOR
+* Stuart Kuredjian, [dbconfession78](https://www.github.com/dbconfession78) [in](linkedin.com/in/stuart-kuredjian) | [@stueygk](https://twitter.com/stueygk) | [sgkur04@gmail.com](sgkur04@gmail.com)
