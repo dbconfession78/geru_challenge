@@ -1,3 +1,12 @@
+Description
+===========
+This application queries a remote 'Zen of Python' dictionary to:
+	 - display all 19 lines from the dictionary
+	 - display a specific quote and quote number from the dictionary
+	 - display a random quote and quote number from the dictionary
+
+The application assigns a unique uuid4 id to each unique browser that makes a reuqest. This id, along with the requested page and time are recorded in a sqlite3 database available for query by a RESTful API.
+
 Installation
 =============
 from the comand line:
@@ -6,29 +15,33 @@ from the comand line:
 
 Use
 ===
-* start server: 'geru_start'
-* stop server: 'geru_stop'
+NOTE: THis is intended for development and uses a virtual environment. This means that, environmental variables and aliasaes created in setup will not persist between terminal instances
 
-In a browser or curl from the command line:
+At a command-line prompt:
+   * 'geru_start': starts the server. if it is already running, it will restart
+   * 'geru_stop': stops the server
+   * 'geru_restart': stops and starts the server
+
+In a browser (or curl from CLI):
    * localhost:6543/ - returns the landing page
-   * localhost:6543/quotes - returns all quotes
+   * localhost:6543/quotes - returns all quotes (strict slashes enforced)
    * localhost:6543/quotes/<1-19> - returns a specific quote
    * localhost:6543/quotes/random - returns a random quote
 
 api:
-  * all session requests - localhost:6543/api/session_requests
-  	return format:
-    {
-        <session id 1>: [{'time': '<time>', 'request': '<page request>'},
-                         {'time': '<time>', 'request': '<page request>'}],
+  * localhost:6543/api/session_requests - returns all records
+  * optional filter parameters: session_id, request, time
 
-        <session id 2>: [{'time': '<time>', 'request': '<page request>'},
-                         {'time': '<time>', 'request': '<page request>'}]
-    }
+  	example:
+		localhost:6543:api/session_requests?session_id=b984e2b1-251f-4387-a1ca-7034d80b0274&request=http://localhost:6543/quotes/1&time=2018-05-30 01:24:18.548583
 
-  *  all requests from a specific session id - localhost:6543/api/session_requests?=<session_id>
-  	 return format:
-     {
-        <session id>: [{'time': '<time>', 'request': '<page request>'},
-                       {'time': '<time>', 'request': '<page request>'}]
-     }
+	return format:
+	{"response": [
+	                 {
+					     "session_id": "b984e2b1-251f-4387-a1ca-7034d80b0274",
+                         "time": "2018-05-30 22:21:42.548583",
+                         "request": "http://localhost:6543/quotes/1"
+                      }
+                 ]
+	}
+    
