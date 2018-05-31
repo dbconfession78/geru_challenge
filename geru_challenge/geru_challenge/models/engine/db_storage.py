@@ -22,7 +22,7 @@ class DBStorage:
         self.__engine = create_engine('sqlite:///{}'.format(db))
         self.reload()
         self.request_params = {"session_id": PageRequest.session_id,
-                               "page": PageRequest.request,
+                               "request": PageRequest.request,
                                "time": PageRequest.datetime}
 
     def new(self, obj):
