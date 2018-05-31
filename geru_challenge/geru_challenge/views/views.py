@@ -12,13 +12,14 @@ from uuid import uuid4
 
 
 @view_defaults(renderer='templates/index.jinja2')
-class RequestManagaer:
+class RequestManager(object):
     """
     RequestManager class definition related to web and api request views
     """
     def __init__(self, request):
         self.api_url = "https://1c22eh3aj8.execute-api.us-east-1.amazonaws." \
                        "com/challenge/quotes"
+        self.quotes_dct = requests.get(self.api_url)
         self.api_messages = [" is not a valid quote id.",
                              "unable to connect to api."]
         self.n = None
@@ -50,7 +51,7 @@ class RequestManagaer:
         :Return: dictionary with either the requested quote or error message
         """
         self.handle_session()
-        self.n = self.request.matchdict.get('quote_num')
+        self.n = str(self.request.matchdict.get('quote_num'))
         r = requests.get(self.api_url)
         if r.status_code == 200:
             quotes = r.json()["quotes"]
@@ -63,7 +64,7 @@ class RequestManagaer:
 
             if type(self.n) != int:
                 val = "{}".format(self.api_messages[0])
-                return {"quote": "{}".format(val)}
+                return {"dct": {"quote": "{}".format(val), "n": self.n}}
 
             val = quotes[self.n-1] if 0 < self.n <= _len else \
                 self.api_messages[0]
